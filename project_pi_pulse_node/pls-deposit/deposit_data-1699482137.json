@@ -1,0 +1,11 @@
+[{
+    "pubkey": "a9985dc723482e56726a25e1d9d4392617a8a52999c12bbfdf8a4d1942ded1624c0901e9235dec3980a93288a185abde",
+    "withdrawal_credentials": "01000000000000000000000000455844484d95b055b9da35122a5c5f6a8fc7b3",
+    "amount": 32000000000000000,
+    "signature": "af7211004b46e5a39074336382c664cc9a0ddf04b53ba4681df82486a8dbb6ca5df7e72ceed1e9955f5d50184a261ff00ae097714df8f4512f88b024578c99c726b0bf7b94ae314bb9c21b9d07499ed36cc2fcf6584250790f2458b660d6bfb3",
+    "deposit_message_root": "ddf3cef130377f9ab9ecd16090b265a9e938290c17f122260bbce7bc4d6af627",
+    "deposit_data_root": "1acf55d13175dc8566ca1863c3eb3401b5de64f38db35b0ddcd5a9d746aa1817",
+    "fork_version": "00000369",
+    "network_name": "pulsechain",
+    "deposit_cli_version": "2.5.0"
+}]
