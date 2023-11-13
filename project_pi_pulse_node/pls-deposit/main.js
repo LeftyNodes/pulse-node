@@ -14,7 +14,7 @@ var fs = require('fs')
 var Web3 = require('web3')
 
 var web3 = new Web3(new Web3.providers.HttpProvider('https://rpc.pulsechain.com/'))
-var depositAmtWei = web3.utils.toWei(32000000, 'ether');
+var depositAmtWei = web3.utils.toWei("32000000", 'ether');
 
 console.log('depositAmt in Wei:', depositAmtWei)
 
@@ -36,8 +36,8 @@ console.log(res);
 
 async function makeDeposit(pubkey, withdrawal_credentials, signature, deposit_data_root) {
     console.log('in make deposit');
-    /*
-    var senderAddr = "0x0";
+    
+    var senderAddr = "0xACbAd6A1500aF68FBF41A7913b02975d731C7f1B";
     var senderPK = Buffer.from("51dsit05ye95tigp51dsit05ye95tigp51dsit05ye95tigp", 'hex');
     var depositContractAddr = "0x3693693693693693693693693693693693693693";
     var depositContractAbi = JSON.parse(fs.readFileSync('pls-deposit-abi.json', 'utf-8'));
@@ -52,13 +52,15 @@ async function makeDeposit(pubkey, withdrawal_credentials, signature, deposit_da
         gasprice ${web3.eth.gasPrice}
     `)
 
-    var data = contract.methods.deposit(
+    
+    var data = depositContract.methods.deposit(
         pubkey,
         withdrawal_credentials,
         signature,
         deposit_data_root,
     );
-
+    console.log('data:',data)
+/*
     var count = await web3.eth.getTransactionCount(senderAddr, 'latest');
 
     var rawTransaction = {
