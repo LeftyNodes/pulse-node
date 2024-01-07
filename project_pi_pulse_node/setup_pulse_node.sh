@@ -19,7 +19,7 @@ script_dir=$(dirname "$0")
 source "$script_dir/functions.sh"
 
 clear
-echo "     Project Pi, LLC"
+echo "     PulseChain Validator Node Setup by Project Pi, LLC"
 echo "                                                                                                                                                    
                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                          
                  ▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         
