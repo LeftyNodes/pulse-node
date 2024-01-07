@@ -19,7 +19,7 @@ script_dir=$(dirname "$0")
 source "$script_dir/functions.sh"
 
 clear
-echo "     Pulse Node/Validator/Monitoring Setup by Dipslayer"
+echo "     Project Pi, LLC"
 echo "                                                                                                                                                    
                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                          
                  ▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         
@@ -46,7 +46,7 @@ echo "
                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                                                                                                   
                                                                              "
                                                          
-echo "donations: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA "                   
+echo "donations: 0xE61f266417D72A7Ee8116A260927C5EC20f1c278 "                   
 echo "Please press Enter to continue..."
 read -p ""
 clear                                                                                                                                                                                                                          
@@ -73,26 +73,7 @@ if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
   exit 1
 fi
 clear
-echo -e "\033[1;33m"
-echo -e "+============================================+"
-echo -e "|                ☆ Shoutouts ☆               |"
-echo -e "+============================================+"
-echo -e "| Sincere thanks to @rainbowtopgun for his   |"
-echo -e "| invaluable feedback & steadfast support    |"
-echo -e "| during the development of these scripts.   |"
-echo -e "|                                            |"
-echo -e "| Special thanks to raskitoma for forking    |"
-echo -e "| the Yoldark_ETH_staking_dashboard. GitHub: |"
-echo -e "| https://github.com/raskitoma/pulse-        |"
-echo -e "| staking-dashboard                          |"
-echo -e "|                                            |"
-echo -e "| Gratitude to the Pulse-dev Telegram for    |"
-echo -e "| their valuable info & collective wisdom.   |"
-echo -e "|                                            |"
-echo -e "| Big thanks to all who contributed with     |"
-echo -e "| constructive feedback to improve my work!  |"
-echo -e "+--------------------------------------------+"
-echo -e "\033[0m"
+
 
 press_enter_to_continue
 clear
