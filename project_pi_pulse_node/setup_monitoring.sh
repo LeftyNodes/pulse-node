@@ -1,12 +1,6 @@
 #!/bin/bash
 
-# v0.5
 
-#Icosa, Hex, Hedron,
-#Three shapes in symmetry dance,
-#Nature's art is shown.
-
-# By tdslaine aka Peter L Dipslayer  TG: @dipslayer369  Twitter: @dipslayer
 
 script_dir=$(dirname "$0")
 source "$script_dir/functions.sh"
