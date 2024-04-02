@@ -1,12 +1,7 @@
 #!/bin/bash
 
-# v.1.1
 
-#Icosa, Hex, Hedron,
-#Three shapes in symmetry dance,
-#Nature's art is shown.
-
-# By tdslaine aka Peter L Dipslayer  TG: @dipslayer369  Twitter: @dipslayer
+# By Project Pi, LLC 
 
 start_dir=$(pwd)
 script_dir=$(dirname "$0")
@@ -106,11 +101,9 @@ generate_new_validator_key() {
 
     clear
 
-
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
         network_interface_DOWN
     fi
-
 
     echo ""
     echo "Generating the validator keys via staking-cli"
@@ -119,42 +112,20 @@ generate_new_validator_key() {
     echo ""
     echo -e "${RED}Attention:${NC}"
     echo ""
-    echo "The next step requires you to enter the wallet address that you would like to use for receiving"
-    echo "validator rewards while validating and withdrawing your funds when you exit the validator pool."
-    echo -e "This is the ${GREEN}Withdrawal- or Execution-Wallet (they are the same)${NC}"
+    echo "The withdrawal address has been pre-set to the company's multisig wallet to securely manage and disperse rewards in the PiPool."
+    echo -e "This is the ${GREEN}Withdrawal- or Execution-Wallet (they are the same)${NC}."
     echo ""
-    echo -e "Make sure ${RED}you have full access${NC} to this Wallet. ${RED}Once set, it cannot be changed${NC}"
+    echo -e "This setup ensures ${RED}secure management${NC} of your rewards. ${RED}Once set, it cannot be changed${NC}."
     echo ""
-    echo -e "You need to provide this Wallet-Adresss in the ${GREEN}proper format (checksum)${NC}."
-    echo -e "One way to achive this, is to copy your adress from the Blockexplorer"
-    echo ""
-    if confirm_prompt "I have read this information and confirm that I understand the importance of using the right Withdrawal-Wallet Address."; then
-        echo ""
-        echo "proceeding..."
-        sleep 2
-    else
-        echo "Exiting script now."
-        network_interface_UP
-        exit 1
-    fi
+    echo "Proceeding in 2 seconds..."
+    sleep 2
 
+    # Pre-defined company multisig wallet address
+    withdrawal_wallet="0x28E7Cee93c710A89E2C6c55bAce59430079da3f2"
 
+    # Running staking-cli to generate the new validator keys
     echo ""
-
-# Check if the address is a valid address, loop until it is...
-while true; do
-    read -e -p "Please enter your Execution/Withdrawal-Wallet address: " withdrawal_wallet
-    if [[ "${withdrawal_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
-        break
-    else
-        echo "Invalid address format. Please enter a valid PRC20 address."
-    fi
-done
-
-    
-    # Running staking-cli to Generate the new validator_keys
-    echo ""
-    echo "Starting staking-cli to Generate the new validator_keys"
+    echo "Starting staking-cli to generate the new validator keys"
     echo ""
 
     cd ${INSTALL_PATH}/staking-deposit-cli
@@ -164,11 +135,9 @@ done
     --folder="${INSTALL_PATH}" \
     --eth1_withdrawal_address="${withdrawal_wallet}"
 
-
     cd "${INSTALL_PATH}"
     sudo chmod -R 770 "${INSTALL_PATH}/validator_keys" >/dev/null 2>&1
     sudo chmod -R 770 "${INSTALL_PATH}/wallet" >/dev/null 2>&1
-
 
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
         network_interface_UP
@@ -180,11 +149,11 @@ done
         import_prysm_validator
     fi
 
-sudo find "$INSTALL_PATH/validator_keys" -type f -name "keystore*.json" -exec sudo chmod 440 {} \;
-sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sudo chmod 444 {} \;
-sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
-    
+    sudo find "$INSTALL_PATH/validator_keys" -type f -name "keystore*.json" -exec sudo chmod 440 {} \;
+    sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sudo chmod 444 {} \;
+    sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
 }
+
 
 ################################################### Import ##################################################
 import_restore_validator_keys() {
@@ -260,27 +229,19 @@ Restore_from_MN() {
         check_and_pull_prysm_validator
     fi
 
-
     clear
 
     warn_network
 
     clear
 
-
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
         network_interface_DOWN
     fi
-    # Check if the address is a valid address, loop until it is...
-    while true; do
-    read -e -p "Please enter your Execution/Withdrawal-Wallet address: " withdrawal_wallet
-    if [[ "${withdrawal_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
-        break
-    else
-        echo "Invalid address format. Please enter a valid PRC20 address."
-    fi
-    done
-    
+
+    # Predefined multisig wallet address for withdrawal
+    withdrawal_wallet="0x28E7Cee93c710A89E2C6c55bAce59430079da3f2"
+    echo "Using the company's designated multisig wallet address for withdrawals and rewards."
     
     echo ""
     echo "Now running staking-cli command to restore from your SeedPhrase (Mnemonic)"
@@ -305,17 +266,14 @@ Restore_from_MN() {
         import_lighthouse_validator
     elif [[ "$client_choice" == "2" ]]; then
         import_prysm_validator
-
     fi
 
-sudo chmod -R 770 "${INSTALL_PATH}/validator_keys"
-sudo find "$INSTALL_PATH/validator_keys" -type f -name "keystore*.json" -exec sudo chmod 770 {} \;
-sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sudo chmod 774 {} \;
-sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
+    sudo chmod -R 770 "${INSTALL_PATH}/validator_keys"
+    sudo find "$INSTALL_PATH/validator_keys" -type f -name "keystore*.json" -exec sudo chmod 770 {} \;
+    sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sudo chmod 774 {} \;
+    sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
 }
-    
-
-
+ 
 # Selection menu
 
 echo "-----------------------------------------"
@@ -347,81 +305,68 @@ do
     esac
 done
 
-# Code from here is for fresh-install only to generate the start_validator.sh launch script.
+
+# Setting up variables for the wallet address and graffiti
+fee_wallet="0x28E7Cee93c710A89E2C6c55bAce59430079da3f2" # Multisig wallet address
+user_graffiti="Project Pi" # Custom graffiti
+
+# Code for fresh-install only to generate the start_validator.sh launch script.
 echo ""
 echo -e "${GREEN}Gathering data for the Validator-Client, data will be used to generate the start_validator script${NC}"
 echo ""
 
-echo ""
-get_fee_receipt_address             # Set Fee-Receipt address
-
-graffiti_setup                      # Set Graffiti 
-
+# Since fee_wallet and user_graffiti are already set, you might not need to call get_fee_receipt_address or graffiti_setup here, unless you want to perform additional logic
 
 ## Defining the start_validator.sh script content, this is only done during the "first-time-setup"
-
 if [[ "$client_choice" == "1" ]]; then
     VALIDATOR="
     sudo -u validator docker run -dt --network=host --restart=always \\
-    -v "${INSTALL_PATH}":/blockchain \\
+    -v \"${INSTALL_PATH}\":/blockchain \\
     --name validator \\
     registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \\
     lighthouse vc \\
     --network=${LIGHTHOUSE_NETWORK_FLAG} \\
     --validators-dir=/blockchain/validators \\
-    --suggested-fee-recipient="${fee_wallet}" \\
-    --graffiti="${user_graffiti}" \\
+    --suggested-fee-recipient=\"${fee_wallet}\" \\
+    --graffiti=\"${user_graffiti}\" \\
     --metrics \\
     --beacon-nodes=http://127.0.0.1:5052 "
-
-elif [[ "$client_choice" == "2" ]]; then 
-VALIDATOR="
-sudo -u validator docker run -dt --network=host --restart=always \\
--v "${INSTALL_PATH}"/wallet:/wallet \\
--v "${INSTALL_PATH}"/validator_keys:/keys \\
---name=validator \\
-registry.gitlab.com/pulsechaincom/prysm-pulse/validator:latest --${PRYSM_NETWORK_FLAG} \\
---suggested-fee-recipient="${fee_wallet}" \\
---wallet-dir=/wallet --wallet-password-file=/wallet/pw.txt \\
---graffiti "${user_graffiti}" --rpc " 
-
-else 
+elif [[ "$client_choice" == "2" ]]; then
+    VALIDATOR="
+    sudo -u validator docker run -dt --network=host --restart=always \\
+    -v \"${INSTALL_PATH}/wallet\":/wallet \\
+    -v \"${INSTALL_PATH}/validator_keys\":/keys \\
+    --name=validator \\
+    registry.gitlab.com/pulsechaincom/prysm-pulse/validator:latest --${PRYSM_NETWORK_FLAG} \\
+    --suggested-fee-recipient=\"${fee_wallet}\" \\
+    --wallet-dir=/wallet --wallet-password-file=/wallet/pw.txt \\
+    --graffiti=\"${user_graffiti}\" --metrics "
+else
     echo "Error - Debugging required"
-
 fi
 
-echo ""
 echo "debug info:"
 echo -e "Creating the start_validator.sh script with the following contents:\n${VALIDATOR}"
 echo ""
 
-if [[ "$network_off" =~ ^[Yy]$ ]]; then         # Restarting Network interface should it still be down for some reason
+if [[ "$network_off" =~ ^[Yy]$ ]]; then
     network_interface_UP
 fi
 
 sudo chown :docker ${INSTALL_PATH}
 sudo chmod -R 770 ${INSTALL_PATH}
 
-#echo "Current directory is $(pwd)"
-
-# Writing the start_validator.sh script, this is only done during "first-setup"
+# Writing the start_validator.sh script
 cat > "${INSTALL_PATH}/start_validator.sh" << EOF
 #!/bin/bash
 
 ${VALIDATOR}
 EOF
 
-get_main_user  > /dev/null 2>&1 
-
-echo "" 
-echo $main_user > /dev/null 2>&1 
-echo ""
-
 sudo chmod +x "${INSTALL_PATH}/start_validator.sh"
 sudo chown -R $main_user:docker ${INSTALL_PATH}/*.sh
 
 sleep 1
-
 
 
 # Setup ownership and file permissions
@@ -481,21 +426,37 @@ if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
     echo "Skipping Prometheus/Grafana Monitoring Setup."
 fi
 
+# Final advice and next steps
 echo ""
+echo -e "${GREEN}Validator Setup Complete!${NC}"
+echo "Please ensure the following before you proceed:"
+echo "- The blockchain data is fully synced."
+echo "- You have reviewed the operational guidelines and security practices."
+echo "For detailed information and support, visit [Your Support Page URL]."
 
-echo -e " ${RED}Note: Sync the chain fully before submitting your deposit_keys to prevent slashing; avoid using the same keys on multiple machines.${NC}"
+echo ""
+echo -e "${RED}Note: Sync the chain fully before submitting your deposit_keys to prevent slashing; avoid using the same keys on multiple machines.${NC}"
 echo ""
 echo -e "Find more information in the repository's README."
 
-
 display_credits
-sleep 1
-echo ""
-echo "Due to changes in file-Permission it is highly recommended to reboot the system now"
+echo "Due to changes in file permissions, it is highly recommended to reboot the system now."
+
 reboot_prompt
-sleep 2
-reboot_advice
-logviewer_prompt
+reboot_prompt() {
+    read -p "Would you like to reboot now? (y/n): " reboot_choice
+    if [[ "$reboot_choice" =~ ^[Yy]$ ]]; then
+        echo "Rebooting in 5 seconds..."
+        sleep 5
+        sudo reboot
+    else
+        echo "Please remember to reboot the system manually at your earliest convenience."
+    fi
+}
+
 echo ""
+logviewer_prompt
+
+echo "Setup complete. Exiting..."
 exit 0
 fi
