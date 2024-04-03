@@ -129,11 +129,25 @@ generate_new_validator_key() {
     echo ""
 
     cd ${INSTALL_PATH}/staking-deposit-cli
-    ./deposit.sh new-mnemonic \
-    --mnemonic_language=english \
-    --chain=${DEPOSIT_CLI_NETWORK} \
-    --folder="${INSTALL_PATH}" \
-    --eth1_withdrawal_address="${withdrawal_wallet}"
+
+expect_script=$(cat <<EOF
+set timeout -1
+spawn ./deposit.sh new-mnemonic --mnemonic_language=english --chain=$DEPOSIT_CLI_NETWORK --folder=${INSTALL_PATH} --eth1_withdrawal_address=$withdrawal_wallet
+expect "Please choose your language"
+send -- "3\r"
+expect "Repeat your execution address for confirmation.:"
+send -- "$withdrawal_wallet\r"
+expect "Please choose how many new validators you wish to run:"
+send -- "1\r"
+interact    # This will allow manual intervention for password entry
+EOF
+)
+
+# Execute the expect script
+expect -c "$expect_script"
+
+
+
 
     cd "${INSTALL_PATH}"
     sudo chmod -R 770 "${INSTALL_PATH}/validator_keys" >/dev/null 2>&1
@@ -153,6 +167,7 @@ generate_new_validator_key() {
     sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sudo chmod 444 {} \;
     sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
 }
+
 
 
 ################################################### Import ##################################################
@@ -252,10 +267,33 @@ Restore_from_MN() {
     sudo chmod -R 777 "${INSTALL_PATH}/wallet" >/dev/null 2>&1
        
     cd ${INSTALL_PATH}/staking-deposit-cli/
-    ./deposit.sh existing-mnemonic \
-    --chain=${DEPOSIT_CLI_NETWORK} \
-    --folder="${INSTALL_PATH}" \
-    --eth1_withdrawal_address="${withdrawal_wallet}"
+   
+
+# Prepare and execute the expect script
+expect_script=$(cat <<EOF
+set timeout -1
+spawn ./deposit.sh existing-mnemonic --chain=${DEPOSIT_CLI_NETWORK} --folder=${INSTALL_PATH} --eth1_withdrawal_address=${withdrawal_wallet}
+expect "Please choose your language"
+send -- "3\\r"
+expect "Repeat your execution address for confirmation.:"
+send -- "${withdrawal_wallet}\\r"
+interact
+expect "Enter the index (key number) you wish to start generating more keys from."
+send -- "0\\r"
+expect "Please repeat the index to confirm:"
+send -- "0\\r"
+expect "Please choose how many new validators you wish to run:"
+send -- "1\\r"
+expect "Create a password that secures your validator keystore(s). You will need to re-enter this to decrypt them when you setup your Ethereum validators.:"
+interact
+EOF
+)
+
+    # Execute the expect script
+    expect -c "$expect_script"
+
+
+
      
 
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
