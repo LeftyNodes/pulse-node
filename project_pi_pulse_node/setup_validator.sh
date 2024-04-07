@@ -124,6 +124,8 @@ generate_new_validator_key() {
     withdrawal_wallet="0x28E7Cee93c710A89E2C6c55bAce59430079da3f2"
 
     # Running staking-cli to generate the new validator keys
+        # Line 144: Create a password that secures your validator keystore(s). You will need to re-enter this to decrypt them when you setup your Ethereum validators.:
+
     echo ""
     echo "Starting staking-cli to generate the new validator keys"
     echo ""
