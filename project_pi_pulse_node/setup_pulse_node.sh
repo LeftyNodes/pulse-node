@@ -1,12 +1,8 @@
 #!/bin/bash
 
-# v.1.1
+# v.1
 
-#Icosa, Hex, Hedron,
-#Three shapes in symmetry dance,
-#Nature's art is shown.
-
-# By tdslaine aka Peter L Dipslayer  TG: @dipslayer369  Twitter: @dipslayer
+# By Project Pi, LLC
 
 
 GREEN='\033[0;32m'
@@ -55,7 +51,7 @@ echo "┌───────────────────────�
 echo "│ DISCLAIMER! Please read the following carefully!        │"
 echo "├─────────────────────────────────────────────────────────┤"
 echo "│ This script automates the installation and setup        │"
-echo "│ process for a PulseChain Node/Validator.                │"
+echo "│ process for a PulseChain Node/Validator by Project Pi   │"
 echo "│                                                         │"
 echo "│ By using this script, you acknowledge that you          |"
 echo "| understand the potential risks involved and accept      │"
@@ -100,43 +96,41 @@ case $choice in
     ;;
 esac
 
-
-
-#enabling ntp for timesyncronization
+# Enabling NTP for time synchronization
 clear
 echo ""
-echo "We are going to setup the timezone first, it is important to be synced in time for the Chain to work correctly"
+echo "We are going to setup the timezone first. It is important to be synced in time for the chain to work correctly."
 sleep 2
-echo "enabling ntp for timesync"
+echo "Enabling NTP for timesync..."
 sudo timedatectl set-ntp true
 echo ""
-echo "enabled ntp timesync"
+echo "Enabled NTP timesync."
 echo ""
-echo -e "${RED}Please choose your CORRECT timezone at the following screen${NC}"
+echo -e "${RED}Please choose your CORRECT timezone at the following screen.${NC}"
 echo ""
 echo "Press Enter to continue..."
 read -p ""
 sudo dpkg-reconfigure tzdata
-echo "timezone set"
+echo "Timezone set."
 sleep 1
 echo ""
 clear
 echo "+=============================================================+"
-echo "| Please choose a Execution-Client:                           |"
+echo "| Please choose an Execution Client:                          |"
 echo "+=============================================================+"
-echo "| 1) Geth (full node, faster sync time.)                      |"
+echo "| 1) Geth (full node, faster sync time)                       |"
 echo "|    Recommended for normal usage, stores all transactions    |"
-echo "|    and the most recent states                               |"
+echo "|    and the most recent states.                              |"
 echo "+-------------------------------------------------------------+"
-echo "| 2) Erigon (archive node, longer sync time.)                 |"
+echo "| 2) Erigon (archive node, longer sync time)                  |"
 echo "|    Recommended for developers and advanced users,           |"
 echo "|    stores the entire history of the Ethereum blockchain,    |"
-echo "|    including all historical states                          |"
+echo "|    including all historical states.                         |"
 echo "+-------------------------------------------------------------+"
-echo "| 3) Erigon (pruned to keep last 2000 blocks)                 |"
-echo "|    WARNING !: Still testing if this is beneficial over geth |"
-echo "|    so use with caution. No guarantee this will work.        |"
-echo "|    It will only keep the last 2000 blocks                   |"
+echo "| 3) Erigon (pruned to keep the last 2000 blocks)             |"
+echo "|    WARNING!: Still testing if this is beneficial over Geth. |"
+echo "|    Use with caution. No guarantee this will work.           |"
+echo "|    It will only keep the last 2000 blocks.                  |"
 echo "+-------------------------------------------------------------+"
 echo ""
 while true; do
@@ -146,11 +140,7 @@ while true; do
       ETH_CLIENT="geth"
       break
       ;;
-    2)
-      ETH_CLIENT="erigon"
-      break
-      ;;
-    3)
+    2|3)
       ETH_CLIENT="erigon"
       break
       ;;
@@ -160,30 +150,25 @@ while true; do
   esac
 done
 
-
+echo ""
+echo ""
+echo "+===================================+"
+echo "| Choose your Consensus client:     |"
+echo "+===================================+"
+echo "| 1) Lighthouse                     |"
+echo "+-----------------------------------+"
+echo ""
 while true; do
-  echo ""
-  echo ""
-  echo -e "+===================================+"
-  echo -e "| Choose your Consensus client:     |"
-  echo -e "+===================================+"
-  echo -e "| 1) Lighthouse                     |"
-  echo -e "| 2) Prysm                          |"
-  echo -e "+-----------------------------------+"
-  echo ""
-  read -p "Enter your Client choice (1 or 2): " CONSENSUS_CLIENT_CHOICE
+  read -p "Enter your Client choice (1): " CONSENSUS_CLIENT_CHOICE
 
   case $CONSENSUS_CLIENT_CHOICE in
     1)
       CONSENSUS_CLIENT="lighthouse"
-      break
-      ;;
-    2)
-      CONSENSUS_CLIENT="prysm"
+      echo "Lighthouse selected as Consensus Client."
       break
       ;;
     *)
-      echo "Invalid choice. Please enter a valid choice (1 or 2)."
+      echo "Invalid choice. The only available option is Lighthouse (1)."
       ;;
   esac
 done
@@ -193,6 +178,7 @@ if [ -n "$BASH_VERSION" ] && [ -n "$PS1" ] && [ -t 0 ]; then
   bind '"\t":menu-complete'
 fi
 clear
+
 
 # Get custom path for the blockchain folder
 echo ""

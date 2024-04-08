@@ -1,12 +1,6 @@
 #!/bin/bash
 
-# v.1.1
-
-#Icosa, Hex, Hedron,
-#Three shapes in symmetry dance,
-#Nature's art is shown.
-
-# By tdslaine aka Peter L Dipslayer  TG: @dipslayer369  Twitter: @dipslayer
+# By Project Pi, LLC 
 
 start_dir=$(pwd)
 script_dir=$(dirname "$0")
@@ -31,18 +25,16 @@ function get_user_choices() {
     echo "| (based on your consensus/beacon Client)    |"
     echo "+--------------------------------------------+"
     echo "| 1. Lighthouse                              |"
-    echo "|                                            |"
-    echo "| 2. Prysm                                   |"
     echo "+--------------------------------------------+"
     echo "| 0. Return or Exit                          |"
     echo "+--------------------------------------------+"
     echo ""
-    read -p "Enter your choice (1, 2 or 0): " client_choice
+    read -p "Enter your choice (1 or 0): " client_choice
 
     # Validate user input for client choice
-    while [[ ! "$client_choice" =~ ^[0-2]$ ]]; do
-        echo "Invalid input. Please enter a valid choice (1, 2 or 0): "
-        read -p "Enter your choice (1, 2 or 0): " client_choice
+    while [[ ! "$client_choice" =~ ^[0|1]$ ]]; do
+        echo "Invalid input. Please enter a valid choice (1 or 0): "
+        read -p "Enter your choice (1 or 0): " client_choice
     done
 
     if [[ "$client_choice" == "0" ]]; then
@@ -112,57 +104,52 @@ generate_new_validator_key() {
     fi
 
 
-    echo ""
+      echo ""
     echo "Generating the validator keys via staking-cli"
     echo ""
     echo "Please follow the instructions and make sure to READ! and understand everything on screen"
     echo ""
     echo -e "${RED}Attention:${NC}"
     echo ""
-    echo "The next step requires you to enter the wallet address that you would like to use for receiving"
-    echo "validator rewards while validating and withdrawing your funds when you exit the validator pool."
-    echo -e "This is the ${GREEN}Withdrawal- or Execution-Wallet (they are the same)${NC}"
+    echo "The withdrawal address has been pre-set to the company's multisig wallet to securely manage and disperse rewards in the PiPool."
+    echo -e "This is the ${GREEN}Withdrawal- or Execution-Wallet (they are the same)${NC}."
     echo ""
-    echo -e "Make sure ${RED}you have full access${NC} to this Wallet. ${RED}Once set, it cannot be changed${NC}"
+    echo -e "This setup ensures ${RED}secure management${NC} of your rewards. ${RED}Once set, it cannot be changed${NC}."
     echo ""
-    echo -e "You need to provide this Wallet-Adresss in the ${GREEN}proper format (checksum)${NC}."
-    echo -e "One way to achive this, is to copy your adress from the Blockexplorer"
-    echo ""
-    if confirm_prompt "I have read this information and confirm that I understand the importance of using the right Withdrawal-Wallet Address."; then
-        echo ""
-        echo "proceeding..."
-        sleep 2
-    else
-        echo "Exiting script now."
-        network_interface_UP
-        exit 1
-    fi
+    echo "Proceeding in 2 seconds..."
+    sleep 2
 
+ # Pre-defined company multisig wallet address
+    withdrawal_wallet="0x28E7Cee93c710A89E2C6c55bAce59430079da3f2"
+
+# Running staking-cli to generate the new validator keys
+# Line 144: Create a password that secures your validator keystore(s). You will need to re-enter this to decrypt them when you setup your Ethereum validators.:
 
     echo ""
+    echo "Starting staking-cli to generate the new validator keys"
+    echo ""
 
-# Check if the address is a valid address, loop until it is...
-while true; do
-    read -e -p "Please enter your Execution/Withdrawal-Wallet address: " withdrawal_wallet
-    if [[ "${withdrawal_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
-        break
-    else
-        echo "Invalid address format. Please enter a valid PRC20 address."
-    fi
-done
-
-    
     # Running staking-cli to Generate the new validator_keys
     echo ""
     echo "Starting staking-cli to Generate the new validator_keys"
     echo ""
 
     cd ${INSTALL_PATH}/staking-deposit-cli
-    ./deposit.sh new-mnemonic \
-    --mnemonic_language=english \
-    --chain=${DEPOSIT_CLI_NETWORK} \
-    --folder="${INSTALL_PATH}" \
-    --eth1_withdrawal_address="${withdrawal_wallet}"
+    expect_script=$(cat <<EOF
+set timeout -1
+spawn ./deposit.sh new-mnemonic --mnemonic_language=english --chain=$DEPOSIT_CLI_NETWORK --folder=${INSTALL_PATH} --eth1_withdrawal_address=$withdrawal_wallet
+expect "Please choose your language"
+send -- "3\r"
+expect "Repeat your execution address for confirmation.:"
+send -- "$withdrawal_wallet\r"
+expect "Please choose how many new validators you wish to run:"
+send -- "1\r"
+interact    # This will allow manual intervention for password entry
+EOF
+)
+
+# Execute the expect script
+expect -c "$expect_script"
 
 
     cd "${INSTALL_PATH}"
