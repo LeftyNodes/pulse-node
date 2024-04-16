@@ -1,14 +1,5 @@
 #!/bin/bash
 
-# v.1.1
-
-#Icosa, Hex, Hedron,
-#Three shapes in symmetry dance,
-#Nature's art is shown.
-
-# By tdslaine aka Peter L Dipslayer  TG: @dipslayer369  Twitter: @dipslayer
-
-
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
@@ -19,7 +10,7 @@ script_dir=$(dirname "$0")
 source "$script_dir/functions.sh"
 
 clear
-echo "     PulseChain Validator Node Setup by Project Pi, LLC"
+echo "     PulseChain Validator Node Setup by Project Pi"
 echo "                                                                                                                                                    
                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                          
                  ▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         
